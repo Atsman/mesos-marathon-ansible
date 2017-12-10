@@ -31,9 +31,8 @@
   vars_files:
     - vars/mesos-cluster.yml
   roles:
-    - role: marathon-master
-      marathon_env_vars:
-        - "user.home=/home/ubuntu"
+    - marathon
+    - marathon-master
 
 - name: Provision mesos slaves
   hosts:

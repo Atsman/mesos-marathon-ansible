@@ -1,0 +1,19 @@
+---
+- name: Install mesosphere package
+  apt:
+    name: "{{item}}"
+    state: present
+    allow_unauthenticated: yes 
+    force: yes
+  with_items:
+    - 'marathon'
+
+- name: Make sure marathon conf directorie exist
+  file: path=/etc/default/marathon 
+  state: directory
+  run_once: true
+
+- name: Configure slave defaults
+  template:
+    dest: /etc/default/marathon
+    src: templates/marathon.j2

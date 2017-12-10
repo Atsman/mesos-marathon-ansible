@@ -1,0 +1,10 @@
+MARATHON_MASTER="zk://{% for server in mesos_masters -%}
+{% if not loop.first -%},{%- endif %}
+{{ server }}:2181
+{%- endfor %}/mesos"
+MARATHON_ZK="zk://{% for server in mesos_masters -%}
+{% if not loop.first -%},{%- endif %}
+{{ server }}:2181
+{%- endfor %}/marathon"
+MARATHON_TASK_LAUNCH_TIMEOUT=600000
+MARATHON_MESOS_USER="ubuntu"

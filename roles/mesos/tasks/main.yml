@@ -7,25 +7,13 @@
     force: yes
   with_items:
     - 'mesos'
-    - 'marathon'
 
-- name: Make sure marathon conf directorie exist
-  file: path={{ item }} state=directory
-  with_items:
-    /etc/marathon/conf
-
-- name: Configure ZK for mesos and marathon
+- name: Configure ZK for mesos
   template:
     dest: "{{ item }}"
     src: templates/mesos-zk.j2
   with_items:
     - /etc/mesos/zk
-    - /etc/default/marathon/master
-
-- name: Configure ZK for marathon
-  template:
-    dest: /etc/default/marathon/zk
-    src: templates/marathon-zk.j2
 
 - name: Configure quorum
   template:
@@ -64,14 +52,3 @@
   template:
     dest: /etc/default/mesos-slave
     src: templates/default-mesos-slave.j2
-
-- name: Create Marathon defaults dir
-  file: path=/etc/default/marathon 
-  state: directory
-  run_once: true
-
-- name: Configure marathon
-  lineinfile:
-    create: yes
-    dest: /etc/defaults/marathon/task_launch_timeout
-    line: 600000
