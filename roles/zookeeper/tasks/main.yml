@@ -1,0 +1,20 @@
+---
+- name: Install zookeeper packages
+  apt:
+    name:
+    - zookeeper
+    - zookeeperd
+  tags: zookeeper
+
+- name: Add zookeeper config
+  template: src=templates/zoo.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg owner=root group=root
+  notify:
+    - restart zookeeper
+  tags: zookeeper
+
+- name: Set zookeeper id
+  template: src=templates/myid.j2 dest=/etc/zookeeper/conf/myid owner=root group=root
+  notify:
+    - restart zookeeper
+  tags: zookeeper
+

@@ -1,0 +1,29 @@
+---
+- name: Add key
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+- name: Add repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    filename: docker
+    state: present
+  notify:
+    - apt update
+
+- name: Install docker
+  apt: name='docker-ce=17.06.0~ce-0~ubuntu' state=present force=yes
+
+- name: Create conf dir
+  file: path={{ conf_dir }} state=directory
+
+- name: Override configuration
+  template:
+    src: templates/docker.service.conf.j2
+    dest: "{{ conf_dir }}/docker.service.conf"
+  notify:
+    - docker restart
+
+- name: Run and enable docker
+  systemd: name=docker state=started enabled=yes

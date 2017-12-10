@@ -1,0 +1,4 @@
+zk://{% for server in mesos_masters -%}
+{% if not loop.first -%},{%- endif %}
+{{ server }}:2181
+{%- endfor %}/marathon

@@ -1,0 +1,16 @@
+---
+- name: Install apt requirements
+  apt: name=aptitude
+
+- name: Upgrade the system
+  apt: update_cache=yes upgrade=full autoclean=yes
+
+- name: Install base packages
+  apt:
+    name:
+      - htop
+      - traceroute
+      - vim
+      - openjdk-8-jdk
+      - apt-transport-https
+    state: present

@@ -1,0 +1,77 @@
+---
+- name: Install mesosphere package
+  apt:
+    name: "{{item}}"
+    state: present
+    allow_unauthenticated: yes 
+    force: yes
+  with_items:
+    - 'mesos'
+    - 'marathon'
+
+- name: Make sure marathon conf directorie exist
+  file: path={{ item }} state=directory
+  with_items:
+    /etc/marathon/conf
+
+- name: Configure ZK for mesos and marathon
+  template:
+    dest: "{{ item }}"
+    src: templates/mesos-zk.j2
+  with_items:
+    - /etc/mesos/zk
+    - /etc/default/marathon/master
+
+- name: Configure ZK for marathon
+  template:
+    dest: /etc/default/marathon/zk
+    src: templates/marathon-zk.j2
+
+- name: Configure quorum
+  template:
+    dest: /etc/mesos-master/quorum
+    src: templates/quorum.j2
+
+- name: Configure master ips
+  template:
+    dest: /etc/mesos-master/{{ item }}
+    src: templates/master-{{ item }}.j2
+  with_items:
+    - ip
+    - hostname
+
+- name: Configure slave ips
+  template:
+    dest: /etc/mesos-slave/{{ item }}
+    src: templates/slave-{{ item }}.j2
+  with_items:
+    - ip
+    - hostname
+
+- name: Configure containerizers
+  lineinfile:
+    create: yes
+    dest: /etc/mesos-slave/containerizers
+    line: docker,mesos
+
+- name: Configure docker timeout
+  lineinfile:
+    create: yes
+    dest: /etc/mesos-slave/executor_registration_timeout
+    line: 10mins
+
+- name: Configure slave defaults
+  template:
+    dest: /etc/default/mesos-slave
+    src: templates/default-mesos-slave.j2
+
+- name: Create Marathon defaults dir
+  file: path=/etc/default/marathon 
+  state: directory
+  run_once: true
+
+- name: Configure marathon
+  lineinfile:
+    create: yes
+    dest: /etc/defaults/marathon/task_launch_timeout
+    line: 600000

@@ -1,0 +1,20 @@
+---
+- name: Add mesosphere key to apt
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: E56151BF
+    state: present
+
+- shell: lsb_release -is | tr '[:upper:]' '[:lower:]'
+  register: DISTRO
+
+- shell: lsb_release -cs
+  register: CODENAME
+
+- name: Add mesosphere repo to apt
+  apt_repository:
+    repo: deb http://repos.mesosphere.com/{{DISTRO.stdout}} {{CODENAME.stdout}} main
+    filename: mesosphere
+    state: present
+  notify:
+    - apt update

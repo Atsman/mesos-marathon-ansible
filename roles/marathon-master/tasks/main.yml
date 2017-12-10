@@ -1,0 +1,5 @@
+---
+- name: Make sure marathon master services are running
+  systemd: name={{ item }} state=started enabled=yes
+  with_items:
+    - marathon

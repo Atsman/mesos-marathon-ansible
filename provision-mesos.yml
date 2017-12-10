@@ -1,0 +1,46 @@
+- name: Provision all mesos hosts
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - vars/mesos-cluster.yml
+  hosts:
+    - mesos-masters
+    - mesos-slaves
+  roles:
+    - common
+    - docker
+    - zookeeper
+    - mesosphere-repo
+    - mesos
+
+- name: Provision all mesos masters
+  hosts:
+    - mesos-masters
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - vars/mesos-cluster.yml
+  roles:
+    - mesos-master
+
+- name: Provision all marathon masters
+  hosts:
+    - marathon-masters
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - vars/mesos-cluster.yml
+  roles:
+    - role: marathon-master
+      marathon_env_vars:
+        - "user.home=/home/ubuntu"
+
+- name: Provision mesos slaves
+  hosts:
+    - mesos-slaves
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - vars/mesos-cluster.yml
+  roles:
+    - mesos-slave

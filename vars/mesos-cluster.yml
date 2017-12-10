@@ -1,0 +1,7 @@
+---
+mesos_masters:
+  - 0.0.0.0
+marathon_masters:
+  - 0.0.0.0
+zookeeper_hosts:
+  - 0.0.0.0

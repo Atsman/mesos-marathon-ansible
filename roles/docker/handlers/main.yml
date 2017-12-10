@@ -1,0 +1,6 @@
+---
+- name: apt update
+  apt: update_cache=yes
+
+- name: docker restart
+  systemd: name=docker state=restarted daemon_reload=yes

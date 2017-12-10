@@ -1,0 +1,8 @@
+---
+- name: restart mesos-master
+  when: mesos_master == "yes"
+  systemd: name=mesos-master state=restarted
+
+- name: restart mesos-slave
+  when: mesos_master == "no"
+  systemd: name=mesos-slave state=restarted
