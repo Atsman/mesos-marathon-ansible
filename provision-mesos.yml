@@ -43,3 +43,11 @@
     - vars/mesos-cluster.yml
   roles:
     - mesos-slave
+
+- name: Provision lb hosts
+  hosts:
+    - marathon-lb
+  gather_facts: yes
+  become: yes
+  roles:
+    - marathon-lb
